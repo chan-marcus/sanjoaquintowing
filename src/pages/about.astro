@@ -1,0 +1,61 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../config/site';
+---
+
+<Base title={`About ${SITE.brand} | Tow Dispatch in ${SITE.city}, ${SITE.state}`}
+      description={`How ${SITE.brand} works: a local 24/7 dispatch service that sends licensed tow operators across Stockton, Lodi, Manteca and Tracy.`}
+      path="/about/">
+  <section class="s-ink">
+    <div class="wrap">
+      <p class="eyebrow">About</p>
+      <h1>A local dispatch desk for San Joaquin County</h1>
+      <div class="prose" style="margin-top:1.4rem;">
+        <p>
+          {SITE.brand} is a dispatch and referral service. We do not pretend to be one big
+          fleet. When you call, a dispatcher takes down where you are and what you need, then
+          finds the nearest licensed independent operator with the right truck for the job.
+        </p>
+        <p>
+          That might be a flatbed for an all-wheel-drive SUV on the Crosstown, a wheel-lift for a
+          sedan in a Lodi parking lot, or a heavy wrecker for a box truck on Arch-Airport Road.
+          The point is that you make one call and the right truck comes.
+        </p>
+        <p>
+          Before anything is sent, you hear the price and an estimated arrival time. If either
+          one does not work for you, say so. Nothing is owed until you agree.
+        </p>
+      </div>
+      <figure class="figure" style="max-width:52em;">
+        <img src="/img/how-dispatch-works.svg" alt="Four-step flow: you call (209) 850-ROAD, hear a quote and ETA before anything moves, the nearest licensed local operator is sent, and the job is done" width="1200" height="480" />
+      </figure>
+    </div>
+  </section>
+
+  <section class="s-paper">
+    <div class="wrap">
+      <div class="prose">
+        <h2>Why a dispatch service helps</h2>
+        <p>
+          Tow operators in the valley are mostly small outfits, with a few trucks each spread
+          between Lodi and Tracy. At two in the morning, the one closest to you may not be the
+          one whose number you happen to find. A dispatch desk keeps track of who is working and
+          where, so you do not have to call around in the dark.
+        </p>
+        <p>
+          It also means one number to remember. {SITE.phoneDisplay} spells out on any phone
+          keypad, and it is the same number whether you are stuck on Highway 12 in the Delta or on
+          the Altamont grade.
+        </p>
+        <h2>What we will not do</h2>
+        <p>
+          We will not quote one price and charge another. We will not invent an arrival time to
+          keep you on the line. And we will tell you when you do not need a tow at all, for
+          example when a jump or a spare tire will get you home.
+        </p>
+      </div>
+      <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+      <p class="muted" style="margin-top:1.4rem; font-size:0.9rem; max-width:46em;">{SITE.legalLine}</p>
+    </div>
+  </section>
+</Base>

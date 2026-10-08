@@ -1,0 +1,32 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+const posts = (await getCollection('blog')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<Base title="Towing Guides for San Joaquin County | San Joaquin Towing" description="Plain answers about tow costs, tule fog breakdowns and getting a towed car back in Stockton and San Joaquin County." path="/blog/">
+  <section class="s-ink">
+    <div class="wrap">
+      <p class="eyebrow">Local knowledge</p>
+      <h1>Guides</h1>
+      <p class="muted" style="max-width:38em; margin-top:1em;">
+        Plain answers for drivers on I-5, Highway 99 and the roads in between.
+      </p>
+      <div class="grid c2" style="margin-top:2rem;">
+        {posts.map((p) => (
+          <a class="card" style="padding:0; overflow:hidden;" href={`/blog/${p.id.replace(/\.md$/, '')}/`}>
+            {p.data.hero && (
+              <span style="display:block; line-height:0; border-bottom:1px solid var(--ink-line);">
+                <img src={p.data.hero} alt={p.data.heroAlt ?? ''} width="1200" height="480" loading="lazy" style="width:100%; height:auto;" />
+              </span>
+            )}
+            <span style="display:block; padding:1.5rem;">
+              <h3>{p.data.title}</h3>
+              <p>{p.data.description}</p>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

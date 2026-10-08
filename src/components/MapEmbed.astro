@@ -1,0 +1,188 @@
+---
+// Interactive Google map, themed to the site palette.
+//
+// The API key is read at BUILD TIME from the environment and is never committed:
+//   Cloudflare Pages -> Settings -> Environment variables -> PUBLIC_GOOGLE_MAPS_API_KEY
+//   locally           -> a gitignored .env with the same name
+//
+// Requires the "Maps JavaScript API" enabled in Google Cloud, and the key
+// restricted by HTTP referrer to the live domain.
+//
+// Pass `points` to highlight a whole service area (marker + coverage circle on
+// each, auto-framed). Pass none and it highlights the single lat/lng.
+interface Props {
+  lat?: number;
+  lng?: number;
+  zoom?: number;
+  title: string;
+  caption?: string;
+  points?: { name: string; lat: number; lng: number }[];
+}
+const { lat = 0, lng = 0, zoom = 11, title, caption, points = [] } = Astro.props;
+
+// Resolve the key without depending on one exact variable name. Hosting configs
+// disagree (PUBLIC_ prefix, GOOGLE_ prefix, MAPS vs MAP), and a name mismatch
+// fails silently as a blank map, so try the conventional names first, then fall
+// back to scanning the environment for anything map-key shaped.
+function resolveApiKey(): { key: string; source: string } {
+  const named: Record<string, unknown> = {
+    'import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY': import.meta.env.PUBLIC_GOOGLE_MAPS_API_KEY,
+    PUBLIC_GOOGLE_MAPS_API_KEY: process.env.PUBLIC_GOOGLE_MAPS_API_KEY,
+    GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+    MAPS_API_KEY: process.env.MAPS_API_KEY,
+    GOOGLE_API_KEY: process.env.GOOGLE_API_KEY
+  };
+  for (const [source, value] of Object.entries(named)) {
+    if (typeof value === 'string' && value.trim()) return { key: value.trim(), source };
+  }
+  for (const [name, value] of Object.entries(process.env)) {
+    if (typeof value !== 'string' || !value.trim()) continue;
+    const n = name.toUpperCase();
+    if (n.includes('KEY') && (n.includes('MAP') || n.includes('GOOGLE'))) {
+      return { key: value.trim(), source: name };
+    }
+  }
+  return { key: '', source: '' };
+}
+
+const { key: apiKey, source: keySource } = resolveApiKey();
+
+if (apiKey) {
+  // Log the variable NAME only, never the value. Build logs are not private.
+  console.log(`[MapEmbed] Using Google Maps key from ${keySource}`);
+} else {
+  console.warn(
+    '[MapEmbed] No Google Maps API key found. Rendering the fallback panel. ' +
+    'Set PUBLIC_GOOGLE_MAPS_API_KEY in Cloudflare Pages env vars (and .env locally).'
+  );
+}
+
+const mapId = 'gmap-' + Math.random().toString(36).slice(2, 9);
+const focus = points.length ? points[0] : { lat, lng };
+const openLink = `https://www.google.com/maps/search/?api=1&query=${focus.lat},${focus.lng}`;
+---
+
+<figure class="map-embed">
+  <div class="map-frame">
+    {apiKey ? (
+      <div id={mapId} class="map-canvas" role="img" aria-label={title}></div>
+    ) : (
+      <div class="map-canvas map-fallback"><p>Coverage map unavailable.</p></div>
+    )}
+  </div>
+  <figcaption class="map-cap">
+    {caption && <span>{caption}</span>}
+    <a href={openLink} target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+  </figcaption>
+</figure>
+
+{apiKey && (
+  <script define:vars={{ apiKey, mapId, lat, lng, zoom, title, points }}>
+    (function () {
+      var STYLE = [
+        { elementType: 'geometry', stylers: [{ color: '#1f2328' }] },
+        { elementType: 'labels.text.stroke', stylers: [{ color: '#121417' }] },
+        { elementType: 'labels.text.fill', stylers: [{ color: '#a6aca5' }] },
+        { elementType: 'labels.icon', stylers: [{ visibility: 'off' }] },
+        { featureType: 'administrative', elementType: 'geometry.stroke', stylers: [{ color: '#4a5048' }] },
+        { featureType: 'administrative.land_parcel', stylers: [{ visibility: 'off' }] },
+        { featureType: 'poi', elementType: 'geometry', stylers: [{ color: '#23282d' }] },
+        { featureType: 'poi', elementType: 'labels', stylers: [{ visibility: 'off' }] },
+        { featureType: 'poi.park', elementType: 'geometry', stylers: [{ color: '#1d2e22' }] },
+        { featureType: 'road', elementType: 'geometry', stylers: [{ color: '#2b3036' }] },
+        { featureType: 'road', elementType: 'geometry.stroke', stylers: [{ color: '#121417' }] },
+        { featureType: 'road', elementType: 'labels.text.fill', stylers: [{ color: '#9aa098' }] },
+        { featureType: 'road.highway', elementType: 'geometry', stylers: [{ color: '#3b4046' }] },
+        { featureType: 'transit', stylers: [{ visibility: 'off' }] },
+        { featureType: 'water', elementType: 'geometry', stylers: [{ color: '#132a2c' }] }
+      ];
+
+      function initMap() {
+        var el = document.getElementById(mapId);
+        if (!el || el.dataset.ready) return;
+        el.dataset.ready = '1';
+
+        var map = new google.maps.Map(el, {
+          center: { lat: lat, lng: lng },
+          zoom: zoom,
+          styles: STYLE,
+          backgroundColor: '#181b1f',
+          mapTypeControl: false,
+          streetViewControl: false,
+          gestureHandling: 'cooperative'
+        });
+
+        var DOT = {
+          path: google.maps.SymbolPath.CIRCLE,
+          scale: 7,
+          fillColor: '#ff6b2c',
+          fillOpacity: 1,
+          strokeColor: '#1a0800',
+          strokeWeight: 2
+        };
+
+        // A marker alone reads as a single address. The circle communicates
+        // "we cover this area", which is the actual question a visitor has.
+        function highlight(pos, label) {
+          new google.maps.Circle({
+            map: map, center: pos, radius: 6000,
+            fillColor: '#ff6b2c', fillOpacity: 0.12,
+            strokeColor: '#ff6b2c', strokeOpacity: 0.65, strokeWeight: 1.5,
+            clickable: false
+          });
+          new google.maps.Marker({ position: pos, map: map, title: label, icon: DOT });
+        }
+
+        if (points && points.length) {
+          var bounds = new google.maps.LatLngBounds();
+          points.forEach(function (p) {
+            var pos = { lat: p.lat, lng: p.lng };
+            highlight(pos, p.name);
+            bounds.extend(pos);
+          });
+          map.fitBounds(bounds, 48);
+        } else {
+          highlight({ lat: lat, lng: lng }, title);
+        }
+      }
+
+      // Load the SDK once even if several maps share a page.
+      if (window.google && window.google.maps) {
+        initMap();
+      } else {
+        window.__gmapsQueue = window.__gmapsQueue || [];
+        window.__gmapsQueue.push(initMap);
+        if (!window.__gmapsLoading) {
+          window.__gmapsLoading = true;
+          window.__gmapsReady = function () {
+            (window.__gmapsQueue || []).forEach(function (fn) { fn(); });
+          };
+          var s = document.createElement('script');
+          s.src = 'https://maps.googleapis.com/maps/api/js?key=' + apiKey + '&callback=__gmapsReady';
+          s.async = true; s.defer = true;
+          document.head.appendChild(s);
+        }
+      }
+    })();
+  </script>
+)}
+
+<style>
+  .map-embed { margin: 0; }
+  .map-frame {
+    border-radius: var(--r); overflow: hidden; border: 1px solid var(--ink-line);
+    box-shadow: var(--shadow-lg); background: var(--ink-2); line-height: 0;
+  }
+  .map-canvas { width: 100%; height: 360px; }
+  @media (min-width: 720px) { .map-canvas { height: 440px; } }
+  .map-fallback { display: grid; place-items: center; line-height: 1.5; color: var(--slate); font-size: 0.95rem; }
+  .map-cap {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+    gap: 0.6rem; margin-top: 0.9rem; font-size: 0.9rem; color: var(--slate);
+  }
+  .map-cap a {
+    font-family: var(--mono); font-weight: 600; font-size: 0.78rem;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent);
+  }
+  .s-paper .map-cap { color: var(--slate-deep); }
+</style>

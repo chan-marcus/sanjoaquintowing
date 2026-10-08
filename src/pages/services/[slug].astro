@@ -1,0 +1,119 @@
+---
+import Base from '../../layouts/Base.astro';
+import { sentences } from '../../lib/text';
+import { SITE } from '../../config/site';
+import { SERVICES } from '../../data/services';
+import { TRUST } from '../../data/trust';
+
+export function getStaticPaths() {
+  return SERVICES.map((s) => ({ params: { slug: s.slug }, props: { s } }));
+}
+const { s } = Astro.props;
+
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: s.faq.map((f) => ({
+    '@type': 'Question', name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a }
+  }))
+};
+const serviceSchema = {
+  '@context': 'https://schema.org', '@type': 'Service',
+  name: s.name, serviceType: s.name,
+  provider: { '@type': SITE.schemaType, name: SITE.brand, telephone: SITE.phone },
+  areaServed: SITE.areaServed,
+  availableChannel: { '@type': 'ServiceChannel', servicePhone: SITE.phone }
+};
+const breadcrumbSchema = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: SITE.url + '/#services' },
+    { '@type': 'ListItem', position: 3, name: s.name, item: `${SITE.url}/services/${s.slug}/` }
+  ]
+};
+
+const others = SERVICES.filter((x) => x.slug !== s.slug).slice(0, 3);
+---
+
+<Base title={s.metaTitle} description={s.metaDesc} path={`/services/${s.slug}/`}>
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(serviceSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <section class="s-ink">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <a href="/#services">Services</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{s.name}</span>
+      </nav>
+      <p class="eyebrow">{SITE.hoursLine}</p>
+      <h1>{s.h1}</h1>
+      {s.intro.map((p) => <p style="max-width:42em; margin-top:1em;">{p}</p>)}
+      <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+
+      <figure class="figure" style="max-width:46em;">
+        <img src={s.image} alt={s.imageAlt} width="1200" height="480" loading="eager" />
+      </figure>
+
+      <ul class="spec" style="margin-top:2.2rem;">
+        {s.bullets.map((b) => (
+          <li><strong>{b.label}</strong><span>{b.text}</span></li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  {s.body.length > 0 && (
+    <section class="s-paper">
+      <div class="wrap">
+        <div class="prose">
+          {s.body.map((sec) => (
+            <div>
+              <h2>{sec.h}</h2>
+              {sec.p.map((para) => <p>{para}</p>)}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Why call us</p>
+      <h2>What you get</h2>
+      <div class="grid c4" style="margin-top:1.6rem;">
+        {TRUST.map((t) => (
+          <div class="card" style="cursor:default;"><h3>{t.label}</h3><p>{sentences(t.text).map((x) => <span class="sent">{x}</span>)}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="s-ink">
+    <div class="wrap">
+      <h2>Questions about {s.name.toLowerCase()}</h2>
+      <div style="max-width:46em; margin-top:1.4rem;">
+        {s.faq.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Also available</p>
+      <div class="grid c3">
+        {others.map((o) => (
+          <a class="card" href={`/services/${o.slug}/`}>
+            <span class="go" aria-hidden="true">→</span>
+            <h3>{o.name}</h3><p>{sentences(o.short).map((x) => <span class="sent">{x}</span>)}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>

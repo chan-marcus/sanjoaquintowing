@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import { SITE } from '../config/site';
+import { AREAS } from '../data/cities';
+
+const coveragePoints = AREAS.map((a) => ({ name: a.name, lat: a.mapLat, lng: a.mapLng }));
+---
+
+<Base title={`Contact ${SITE.brand} | ${SITE.phoneDigits}`}
+      description={`Reach ${SITE.brand} at ${SITE.phoneDigits} for service in ${SITE.serviceAreaLine}.`}
+      path="/contact/">
+  <section class="s-ink">
+    <div class="wrap">
+      <p class="eyebrow">Fastest way: call</p>
+      <h1>Call for the fastest help</h1>
+      <p style="max-width:40em; margin-top:1em;">
+        A tow cannot wait on an email. Calling puts you straight through to a dispatcher, who
+        can quote the price and give you an ETA while you are still on the line.
+      </p>
+      <p class="muted" style="font-family:var(--mono); font-size:0.9rem; margin-top:0.8rem;">{SITE.hoursLine} · {SITE.phoneDigits}</p>
+      <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+
+      <h2 style="margin-top:3rem;">Have this ready when you call</h2>
+      <ul class="spec">
+        <li><strong>Where you are</strong><span>On a freeway, give the direction and the nearest exit. In town, a cross street or business name works.</span></li>
+        <li><strong>Your vehicle</strong><span>Make, model, and whether it is AWD or electric. That decides which truck is sent.</span></li>
+        <li><strong>Where it should go</strong><span>A shop, your home or a dealership. The destination sets the mileage in your quote.</span></li>
+      </ul>
+      <p class="muted" style="font-size:0.95rem; max-width:46em;">
+        Service area: {SITE.serviceAreaLine}.
+      </p>
+    </div>
+  </section>
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Service area</p>
+      <h2 style="margin-bottom:1.6rem;">Everywhere we cover</h2>
+      <MapEmbed points={coveragePoints} zoom={10}
+        title={`Map highlighting the ${SITE.brand} service area`}
+        caption={SITE.serviceAreaLine} />
+    </div>
+  </section>
+</Base>

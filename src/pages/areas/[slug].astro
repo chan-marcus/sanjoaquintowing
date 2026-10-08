@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+import MapEmbed from '../../components/MapEmbed.astro';
+import { sentences } from '../../lib/text';
+import { SITE } from '../../config/site';
+import { AREAS } from '../../data/cities';
+import { SERVICES } from '../../data/services';
+
+export function getStaticPaths() {
+  return AREAS.map((a) => ({ params: { slug: a.slug }, props: { a } }));
+}
+const { a } = Astro.props;
+const topServices = SERVICES.slice(0, 6);
+const otherAreas = AREAS.filter((x) => x.slug !== a.slug);
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Coverage', item: SITE.url + '/#areas' },
+    { '@type': 'ListItem', position: 3, name: a.name, item: `${SITE.url}/areas/${a.slug}/` }
+  ]
+};
+---
+
+<Base title={a.metaTitle} description={a.metaDesc} path={`/areas/${a.slug}/`}>
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
+
+  <section class="s-ink">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Breadcrumb">
+        <a href="/">Home</a><span aria-hidden="true">/</span>
+        <span aria-current="page">{a.name}</span>
+      </nav>
+      <p class="eyebrow">{SITE.hoursLine}</p>
+      <h1>{a.h1}</h1>
+      {a.intro.map((p) => <p style="max-width:42em; margin-top:1em;">{p}</p>)}
+      <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+      <p class="muted" style="margin-top:1.2rem; font-size:0.95rem; max-width:46em;">
+        Covering {a.landmarks.join(', ')} · ZIP {a.zips.join(', ')}
+      </p>
+    </div>
+  </section>
+
+  <section class="s-paper">
+    <div class="wrap">
+      <div class="prose">
+        {a.sections.map((sec) => (
+          <div>
+            <h2>{sec.h}</h2>
+            {sec.p.map((para) => <p>{para}</p>)}
+          </div>
+        ))}
+      </div>
+      <figure class="figure" style="max-width:52em; margin-top:2.6rem;">
+        <img src="/img/valley-corridors.svg" alt={`Schematic map of San Joaquin County corridors with ${a.name} highlighted among Lodi, Stockton, Manteca and Tracy, showing I-5, Highway 99, I-205, I-580, Highway 120 and Highway 12`} width="1200" height="700" loading="lazy" />
+      </figure>
+      <p class="figure-cap">The four towns we cover and the corridors that connect them.</p>
+    </div>
+  </section>
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Coverage map</p>
+      <h2 style="margin-bottom:1.6rem;">Where we work in {a.name}</h2>
+      <MapEmbed
+        lat={a.mapLat}
+        lng={a.mapLng}
+        zoom={12}
+        title={`Map of the ${SITE.brand} service area in ${a.name}, ${SITE.state}`}
+        caption={`${SITE.hoursLine} · ZIP ${a.zips.join(', ')}`}
+      />
+    </div>
+  </section>
+
+  <section class="s-ink">
+    <div class="wrap">
+      <p class="eyebrow">Available in {a.name}</p>
+      <h2>Services</h2>
+      <div class="grid c3" style="margin-top:1.6rem;">
+        {topServices.map((s) => (
+          <a class="card" href={`/services/${s.slug}/`}>
+            <span class="go" aria-hidden="true">→</span>
+            <h3>{s.name}</h3><p>{sentences(s.short).map((x) => <span class="sent">{x}</span>)}</p>
+          </a>
+        ))}
+      </div>
+      <p style="margin-top:2rem;">
+        <a href="/#services">All services</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Nearby</p>
+      <h2>Other towns we cover</h2>
+      <div class="grid c3" style="margin-top:1.6rem;">
+        {otherAreas.map((o) => (
+          <a class="card" href={`/areas/${o.slug}/`}>
+            <span class="go" aria-hidden="true">→</span>
+            <h3>{o.name}</h3><p>{o.landmarks.slice(0, 3).join(' · ')}</p>
+          </a>
+        ))}
+      </div>
+      <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+    </div>
+  </section>
+</Base>

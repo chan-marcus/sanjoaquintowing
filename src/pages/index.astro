@@ -1,0 +1,178 @@
+---
+import Base from '../layouts/Base.astro';
+import MapEmbed from '../components/MapEmbed.astro';
+import { sentences } from '../lib/text';
+import { SITE } from '../config/site';
+import { SERVICES } from '../data/services';
+import { AREAS } from '../data/cities';
+import { TRUST, REVIEWS } from '../data/trust';
+
+const homeFaq = [
+  {
+    q: 'How fast can a tow truck get to me in Stockton?',
+    a: "It depends on where the nearest available operator is and on traffic at that hour. The dispatcher gives you a specific ETA on the call, before you agree to anything."
+  },
+  {
+    q: 'How much does a tow cost in San Joaquin County?',
+    a: "Most tows are a hook-up fee plus mileage, with extras for things like winching or a car that will not roll. You hear the full price on the phone before a truck is sent."
+  },
+  {
+    q: 'Are you the tow company, or a dispatch service?',
+    a: "We are a local dispatch and referral service. The work is done by licensed independent tow operators who cover Stockton, Lodi, Manteca and Tracy. We find the closest one with the right truck and confirm the price with you."
+  },
+  {
+    q: 'Do you tow electric and all-wheel-drive cars?',
+    a: "Yes. Tell the dispatcher the make and model and a flatbed will be sent, which is what most EV and AWD manufacturers require."
+  },
+  {
+    q: 'What should I do while I wait on the freeway?',
+    a: "Get as far right as you can, turn on your hazards and stay belted in unless there is a safe spot well behind the guardrail. If you are stuck in a travel lane or anyone is hurt, call 911 first."
+  }
+];
+const steps = [
+  { n: '1', h: 'Call (209) 850-ROAD', p: 'A dispatcher answers at any hour and asks where you are and what you need.' },
+  { n: '2', h: 'Hear the price and ETA', p: 'Both are given on the call, before anything moves. If they do not work for you, decline.' },
+  { n: '3', h: 'A local operator is sent', p: 'The nearest licensed operator with the right truck heads your way.' }
+];
+const faqSchema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: homeFaq.map((f) => ({
+    '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a }
+  }))
+};
+const coveragePoints = AREAS.map((a) => ({ name: a.name, lat: a.mapLat, lng: a.mapLng }));
+---
+
+<Base title={`${SITE.brand} | 24/7 Tow Truck in ${SITE.city}, ${SITE.state}`}
+      description={SITE.metaDescription} path="/">
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+
+  <section class="s-ink">
+    <div class="wrap" style="display:grid; gap:2.5rem;">
+      <div>
+        <p class="eyebrow">24/7 · {SITE.county}</p>
+        <h1>Towing in Stockton and San Joaquin County, <span class="grad">day or night.</span></h1>
+        <p class="lead" style="margin-top:1.2rem;">
+          <span class="sent">Broken down on I-5, Highway 99 or a side street?</span>
+          <span class="sent">A real dispatcher answers, quotes the price and gives you an ETA before a truck is sent.</span>
+        </p>
+        <div class="hero-cta">
+          <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+          <a class="btn-ghost" href="/#services">See services</a>
+        </div>
+        <p class="hero-digits">Dial {SITE.phoneDigits}</p>
+      </div>
+      <figure class="figure">
+        <img src="/img/hero.svg" alt="Night scene on a foggy San Joaquin County freeway: a tow truck hooks up a stopped car beside road flares, under a green sign reading Towing (209) 850-ROAD, 24 hours" width="1200" height="600" />
+      </figure>
+    </div>
+  </section>
+
+  <section id="services" class="s-paper">
+    <div class="wrap">
+      <p class="eyebrow">What we do</p>
+      <h2>Tow and roadside services</h2>
+      <p class="muted" style="margin-top:0.8rem; max-width:40em;">
+        Every service is available around the clock in Stockton, Lodi, Manteca and Tracy.
+      </p>
+      <div class="grid c3" style="margin-top:2rem;">
+        {SERVICES.map((s) => (
+          <a class="card" href={`/services/${s.slug}/`}>
+            <span class="go" aria-hidden="true">→</span>
+            <h3>{s.name}</h3><p>{sentences(s.short).map((x) => <span class="sent">{x}</span>)}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="s-ink">
+    <div class="wrap">
+      <p class="eyebrow">How it works</p>
+      <h2>Three steps, and you stay in control</h2>
+      <div class="grid c3" style="margin-top:1.8rem;">
+        {steps.map((st) => (
+          <div class="card step"><span class="step-n">{st.n}</span><h3>{st.h}</h3><p>{sentences(st.p).map((x) => <span class="sent">{x}</span>)}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Why call us</p>
+      <h2>What you get</h2>
+      <div class="grid c4" style="margin-top:1.6rem;">
+        {TRUST.map((t) => (
+          <div class="card" style="cursor:default;"><h3>{t.label}</h3><p>{sentences(t.text).map((x) => <span class="sent">{x}</span>)}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section id="areas" class="s-ink">
+    <div class="wrap">
+      <p class="eyebrow">Coverage</p>
+      <h2>Where we work</h2>
+      <p class="muted" style="margin-top:0.8rem; max-width:42em;">
+        Stockton, Lodi, Manteca and Tracy, plus the I-5, Highway 99, I-205, Highway 120 and Highway 12 corridors between them.
+      </p>
+      <div style="margin-top:1.8rem;">
+        <MapEmbed points={coveragePoints} zoom={10}
+          title={`Map highlighting the ${SITE.brand} service area`}
+          caption={SITE.serviceAreaLine} />
+      </div>
+      <div class="grid c4" style="margin-top:1.8rem;">
+        {AREAS.map((a) => (
+          <a class="card" href={`/areas/${a.slug}/`}>
+            <span class="go" aria-hidden="true">→</span>
+            <h3>{a.name}</h3><p>{a.landmarks.slice(0, 3).join(' · ')}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  {/* Renders only when real, permissioned quotes exist (see data/trust.ts) */}
+  {REVIEWS.length > 0 && (
+    <section class="s-paper">
+      <div class="wrap">
+        <p class="eyebrow">Customers</p>
+        <h2>What people say</h2>
+        <div class="grid c3" style="margin-top:1.8rem;">
+          {REVIEWS.map((r) => (
+            <div class="card" style="cursor:default;">
+              <p>“{r.quote}”</p>
+              <p style="margin-top:0.8rem;"><strong>{r.name}</strong> · {r.place}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="s-ink-2">
+    <div class="wrap">
+      <p class="eyebrow">Common questions</p>
+      <h2>Before you call</h2>
+      <div style="max-width:46em; margin-top:1.4rem;">
+        {homeFaq.map((f) => (
+          <div class="faq-item"><h3>{f.q}</h3><p>{f.a}</p></div>
+        ))}
+      </div>
+      <a class="btn-call" href={`tel:${SITE.phone}`}>Call {SITE.phoneDisplay}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero-cta { display: flex; flex-wrap: wrap; align-items: center; column-gap: 1.4rem; }
+  .hero-cta .btn-ghost { margin-left: 0; }
+  .hero-digits { font-family: var(--mono); font-size: 0.85rem; color: var(--slate); margin-top: 0.8rem; }
+  .step-n {
+    display: inline-grid; place-items: center; width: 40px; height: 40px; margin-bottom: 1rem;
+    border-radius: var(--r-sm); background: var(--sign); color: #fff;
+    font-family: var(--display); font-weight: 900; font-size: 1.2rem; padding-top: 3px;
+    box-shadow: inset 0 0 0 2px var(--sign), inset 0 0 0 3.5px rgba(255,255,255,0.9);
+  }
+</style>
