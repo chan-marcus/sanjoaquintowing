@@ -24,6 +24,14 @@ and hand-authored SVG diagrams in `public/img/`.
 
 ## Line breaks
 
+**Proper nouns never break across lines.** Place names and other proper nouns
+(San Joaquin County, Highway 99, Grant Line Road, (209) 850-ROAD) are wrapped in
+`<span class="pn">` (nowrap) on every page at build time. The list and patterns
+live in `scripts/proper-nouns.mjs`, so add new multi-word names there when copy
+mentions them. This outranks line fill and balance: if a bound name cannot fit,
+shrink or reword around it, never unbind it. The phone h1 scales so
+"San Joaquin County," always fits.
+
 House rule: text is ragged-right (never justified), with no lone last word, no
 stubby last line, and no sentence starting or ending within two words of a line
 edge. Three layers enforce it:

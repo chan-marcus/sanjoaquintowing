@@ -31,7 +31,7 @@ const articleSchema = {
   <section class="s-ink">
     <div class="wrap">
       <p class="eyebrow">
-        {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+        {post.data.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
       </p>
       <article class="prose">
         <h1>{post.data.title}</h1>

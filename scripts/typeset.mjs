@@ -9,8 +9,14 @@
 //     either exactly at the boundary or at least three words away from it
 // Only text inside <p>, <li>, <figcaption> and <dd> is touched. Markup is left
 // alone apart from nowrap spans around hyphenated words in a joined run.
+//
+// Before any of that, and outranking it: place names and other proper nouns
+// (scripts/proper-nouns.mjs) are wrapped in <span class="pn"> everywhere in the
+// page body, headings and labels included, so "San Joaquin County" never
+// breaks across lines.
 import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { NAMES, PATTERNS, NOT_PART_OF_NAME } from './proper-nouns.mjs';
 
 const NBSP = '\u00a0';
 const ENDS = /[.?!](&#39;|&quot;|["')\u201d])?$/;
@@ -101,6 +107,55 @@ function typesetBlock(inner) {
   }).join('');
 }
 
+// ---------- proper nouns ----------
+
+const escapeRe = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const NAME_RE = new RegExp(
+  [...NAMES].sort((x, y) => y.length - x.length)
+    .map((n) => '\\b' + escapeRe(n).replace(/ /g, '[ \\u00a0]') + '\\b')
+    .concat(PATTERNS.map((r) => r.source))
+    .join('|'),
+  'g'
+);
+const SKIP_TAGS = new Set(['script', 'style', 'svg', 'title', 'textarea', 'head']);
+
+function trimLeading(match) {
+  const words = match.split(/[  ]/);
+  let i = 0;
+  while (i < words.length - 2 && NOT_PART_OF_NAME.has(words[i])) i++;
+  return { skip: words.slice(0, i).join(' ') + (i ? ' ' : ''), name: words.slice(i).join(' ') };
+}
+
+function bindText(text) {
+  return text.replace(NAME_RE, (m) => {
+    const { skip, name } = trimLeading(m);
+    // A single word needs no binding unless it can break at a hyphen (I-5).
+    if (!/[  ]/.test(name) && !/-/.test(name)) return m;
+    return skip + '<span class="pn">' + name + '</span>';
+  });
+}
+
+export function bindProperNouns(html) {
+  const bodyAt = html.indexOf('<body');
+  if (bodyAt < 0) return html;
+  const parts = html.slice(bodyAt).split(/(<[^>]+>)/);
+  const stack = [];
+  const out = parts.map((p) => {
+    if (p.startsWith('<')) {
+      const m = p.match(/^<(\/?)([a-zA-Z0-9-]+)/);
+      if (m) {
+        const tag = m[2].toLowerCase();
+        if (SKIP_TAGS.has(tag) && !p.endsWith('/>')) {
+          if (m[1]) { if (stack[stack.length - 1] === tag) stack.pop(); } else stack.push(tag);
+        }
+      }
+      return p;
+    }
+    return stack.length ? p : bindText(p);
+  });
+  return html.slice(0, bodyAt) + out.join('');
+}
+
 function processHtml(html) {
   return html.replace(/(<(p|li|figcaption|dd)(\s[^>]*)?>)([\s\S]*?)(<\/\2>)/g,
     (_, open, _tag, _attrs, inner, close) => open + typesetBlock(inner) + close);
@@ -118,7 +173,7 @@ export function typesetDist(dir) {
   let n = 0;
   for (const file of walk(dir)) {
     const html = readFileSync(file, 'utf8');
-    const out = processHtml(html);
+    const out = processHtml(bindProperNouns(html));
     if (out !== html) { writeFileSync(file, out); n++; }
   }
   return n;

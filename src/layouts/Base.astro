@@ -164,7 +164,8 @@ const navLinks = [
          paragraph. For each paragraph this tries the joined and unjoined text
          at a few near-invisible letter-spacing steps, and keeps whichever reads
          best at the reader's actual width: a sentence near a line edge costs
-         3, a stub last line 2, a lone last word 4, a short inner line 1. -->
+         3, a stub last line 2, a lone last word 4, a short inner line 1, and
+         text overflowing its column 100. Proper nouns (.pn) are never unbound. -->
     <script is:inline>
       (function () {
         var STEPS = [0, -0.006, 0.006, -0.012, 0.012, -0.018, 0.018, -0.024, 0.024, -0.03, 0.03];
@@ -192,8 +193,11 @@ const navLinks = [
           if (L.length < 2) return 0;
           var cs = getComputedStyle(el);
           var box = el.getBoundingClientRect().width - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-          var s = 0, width = 0;
-          L.forEach(function (l) { width = Math.max(width, l.ws[l.ws.length - 1].r - l.ws[0].l); });
+          var s = 0, width = 0, right = el.getBoundingClientRect().right - parseFloat(cs.paddingRight);
+          L.forEach(function (l) {
+            width = Math.max(width, l.ws[l.ws.length - 1].r - l.ws[0].l);
+            if (l.ws[l.ws.length - 1].r > right + 1) s += 100; // a joined run overflowing its column
+          });
           var lastL = L[L.length - 1], lw = lastL.ws[lastL.ws.length - 1].r - lastL.ws[0].l;
           if (lastL.ws.length === 1) s += 4;
           else if (lw < width * 0.3) s += 2;
@@ -311,12 +315,16 @@ const navLinks = [
 
   h1, h2, h3 { font-family: var(--display); font-weight: 800; line-height: 1.04; letter-spacing: -0.015em; text-wrap: balance; }
   h1 { font-size: clamp(2.5rem, 5.6vw, 4.4rem); font-weight: 900; }
+  /* Proper nouns never wrap (see scripts/proper-nouns.mjs), so on phones the h1
+     scales with the screen until the longest bound name, "San Joaquin County,",
+     fits on one line. */
+  @media (max-width: 480px) { h1 { font-size: calc((100vw - 2rem) / 9.6); } }
   h2 { font-size: clamp(1.85rem, 3.8vw, 2.75rem); }
   h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.005em; }
   p, li, figcaption, dd { text-wrap: pretty; }
   p + p { margin-top: 1em; }
   .sent { display: block; }
-  .nw { white-space: nowrap; }
+  .nw, .pn { white-space: nowrap; }
 
   .wrap { max-width: 1180px; margin: 0 auto; padding: 0 clamp(1rem, 4vw, 3rem); }
   section { position: relative; padding: clamp(4rem, 9vw, 7rem) 0; }
@@ -335,7 +343,7 @@ const navLinks = [
 
   /* Eyebrow as a guide-sign plate: green field, inset white border. */
   .eyebrow {
-    display: inline-flex; align-items: center; gap: 0.5rem;
+    display: inline-block;
     font-family: var(--display); font-weight: 800; text-transform: uppercase;
     letter-spacing: 0.07em; font-size: 0.74rem; line-height: 1; color: #fff;
     padding: 0.55rem 0.8rem 0.45rem; margin-bottom: 1.4rem; white-space: nowrap;
@@ -353,7 +361,7 @@ const navLinks = [
   .prose p { margin-top: 0.9rem; }
 
   .btn-call {
-    display: inline-flex; align-items: center; gap: 0.65rem;
+    display: inline-block;
     background: var(--accent); color: var(--accent-ink);
     font-family: var(--display); font-weight: 800; font-size: 1.15rem; letter-spacing: 0.01em;
     padding: 0.95rem 1.5rem 0.8rem; white-space: nowrap;
