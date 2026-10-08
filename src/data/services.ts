@@ -612,5 +612,117 @@ export const SERVICES: Service[] = [
         a: "Ask about commercial billing when you call. For regular fleet work, set it up in advance."
       }
     ]
+  },
+  {
+    slug: 'long-distance-towing',
+    name: 'Long Distance Towing',
+    short: 'Out of the valley to the Bay Area, Sacramento or beyond. Flatbed transport quoted on the full trip.',
+    metaTitle: 'Long Distance Towing from Stockton, CA | San Joaquin Towing',
+    metaDesc: "Long distance towing from Stockton and San Joaquin County to the Bay Area, Sacramento and beyond. Full-trip quote first. Call (209) 850-7623.",
+    h1: 'Long Distance Towing from Stockton, CA',
+    image: '/img/services/long-distance-towing.svg',
+    imageAlt: 'Illustration of a flatbed carrying a car west on I-580 over the Altamont Pass at dusk, with wind turbines on the ridges and a green sign pointing to the Bay Area',
+    intro: [
+      "Plenty of tows start in San Joaquin County and end somewhere else. A car breaks down on Highway 99 on the way home to Fresno, or someone wants their own dealership in Pleasanton to do the warranty work. Others buy a project car in Lodi that lives in Sacramento, or move house and need the second car brought along.",
+      "We dispatch flatbeds for those longer runs around the clock. Tell the dispatcher where the vehicle is, where it is going and what it is, and you will hear a quote for the whole trip and a pickup time before anything is booked. Nothing is owed if you decide against it."
+    ],
+    bullets: [
+      { label: 'Quoted on the full trip', text: 'Total miles from pickup to drop-off, plus anything the job needs, spelled out on the call.' },
+      { label: 'Flatbed by default', text: 'All four wheels on the deck for the whole drive, which is easier on the car over long distances.' },
+      { label: 'Schedule ahead or go now', text: 'Same-night runs after a breakdown, or a booked pickup for a planned move.' }
+    ],
+    body: [
+      {
+        h: 'Where long tows from here usually go',
+        p: [
+          "West over the Altamont on I-580 is the most common route. People send cars to Bay Area dealerships and specialist shops in Livermore, Pleasanton, Oakland and San Jose. North on I-5 or Highway 99 leads to Sacramento and its suburbs, and south on 99 runs through Modesto and Merced toward Fresno. Each of those is a long run, so the quote matters more than it does on a cross-town tow.",
+          "The Altamont deserves a mention. It is a long climb with strong afternoon winds, and operators plan around it. A flatbed keeps the car stable and level the whole way, which is one reason it is the default for longer moves."
+        ]
+      },
+      {
+        h: 'How to compare a long-distance quote',
+        p: [
+          "Ask what the quote covers. A fair long-distance price is built on the loaded miles from pickup to drop-off, and some operators also count part of the return trip. Ask about tolls, after-hours pickup and anything special about the vehicle, such as a car that will not roll or an EV that needs transport mode.",
+          "Then compare it with the local option. If a good shop in Stockton, Lodi or Tracy can do the repair, a short tow there may cost far less than a long one to your usual mechanic. The dispatcher can quote both so you can decide with real numbers."
+        ]
+      },
+      {
+        h: 'Getting the car ready for a long trip',
+        p: [
+          "Take out anything valuable, plus anything you will need before the car arrives: house keys, garage remotes, documents and chargers. Tell the dispatcher who will meet the truck at the other end and give a phone number for them. Leave the key with the driver. If the car is electric, put it in transport mode before loading."
+        ]
+      }
+    ],
+    faq: [
+      {
+        q: 'How much does a long distance tow from Stockton cost?',
+        a: "It depends mostly on total distance, plus the vehicle and any extras such as a non-rolling car. The dispatcher gives you the full price on the phone before anything is booked."
+      },
+      {
+        q: 'Can you tow my car from Stockton to the Bay Area?',
+        a: "Yes. Runs over the Altamont to the East Bay, the Peninsula and San Jose are among the most common long tows. Tell the dispatcher the exact drop-off address."
+      },
+      {
+        q: 'Can I schedule a long distance tow for later?',
+        a: "Yes. For a planned move, book a pickup time in advance. For a breakdown, a truck can usually be arranged the same day or night."
+      },
+      {
+        q: 'Do I need to be there when the car is picked up or dropped off?',
+        a: "Someone needs to hand over the key and confirm the vehicle at pickup, and someone should be at the other end to receive it. It does not have to be you, as long as the dispatcher has their name and number."
+      }
+    ]
+  },
+  {
+    slug: 'tow-yard-transfer',
+    name: 'Tow Yard Transfer',
+    short: 'Your car is released from a tow or storage yard. We move it to your shop or home before storage piles up.',
+    metaTitle: 'Tow Yard Car Transfer in Stockton, CA | San Joaquin Towing',
+    metaDesc: "Move your car from a Stockton tow or storage yard to a body shop, mechanic or home once it is released. Quote first, 24/7 dispatch. Call (209) 850-7623.",
+    h1: 'Tow Yard Car Transfer in Stockton, CA',
+    image: '/img/services/tow-yard-transfer.svg',
+    imageAlt: 'Diagram of a flatbed leaving a fenced vehicle storage yard with a car on its deck, following a dashed route to a body shop with a garage door',
+    intro: [
+      "After a crash or a police tow, a car often ends up in a storage yard it was never meant to stay in. Every day there adds a storage charge. If the car will not drive, you still need a way to get it to your body shop, your mechanic or your driveway.",
+      "Once the yard has released the vehicle to you, call us. The dispatcher arranges a truck to meet you at the yard, load the car and take it where it needs to go. You hear the price and the timing on the call, before anything is booked."
+    ],
+    bullets: [
+      { label: 'Stop the storage clock', text: 'Storage is billed daily, so moving the car promptly usually saves more than the tow costs.' },
+      { label: 'Damaged cars welcome', text: 'Flatbeds and dollies for vehicles that will not roll, steer or start after a collision.' },
+      { label: 'You choose the shop', text: 'Your insurer may suggest one, but where the car is repaired is your decision.' }
+    ],
+    body: [
+      {
+        h: 'Get the release first, then call the truck',
+        p: [
+          "A yard will only hand a vehicle over once it has been released. For a police or CHP tow, that may mean getting a release from the agency first. For any yard, it usually means showing ID and proof of ownership and paying the tow and storage charges. Our guide to getting a towed car back in Stockton walks through it.",
+          "Most yards release a vehicle only to the registered owner or someone with written authorization. Plan to be at the yard when our truck arrives, or check with the yard ahead of time about what they accept. Ask about their hours too, because some yards keep short release windows on weekends."
+        ]
+      },
+      {
+        h: 'Why moving the car quickly matters',
+        p: [
+          "Storage fees add up every day, and insurers do not always cover all of them if the car sits longer than necessary. A car in a yard also cannot be inspected by your adjuster or repaired by your shop. Moving it to the shop starts the repair clock instead of the storage clock.",
+          "If you are unsure where the car should go, ask your insurer whether they need to inspect it first. Some will look at it at the yard and others at the shop. Settle that before booking the move, so the car only has to travel once."
+        ]
+      }
+    ],
+    faq: [
+      {
+        q: 'Can you pick up my car from a tow yard in Stockton?',
+        a: "Yes, once the yard has released it to you. The dispatcher arranges a truck to meet you there and take the car to your shop, your home or another address."
+      },
+      {
+        q: 'Do I have to be at the tow yard for the pickup?',
+        a: "Usually, yes. Most yards release vehicles only to the registered owner or someone with written authorization, so plan to meet the truck or check the yard's rules first."
+      },
+      {
+        q: 'How much does it cost to move a car out of a tow yard?',
+        a: "It is priced like a regular tow: a hook-up fee plus mileage, with extras if the car will not roll. You get the full price on the call before anything is booked."
+      },
+      {
+        q: 'Will my insurance pay for moving the car to a body shop?',
+        a: "With collision coverage, or when another driver's insurer accepts fault, a tow to the repair shop is often covered. Ask your adjuster and keep the receipt."
+      }
+    ]
   }
 ];

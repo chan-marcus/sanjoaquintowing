@@ -468,6 +468,20 @@ const navLinks = [
     .grid.c3 { grid-template-columns: repeat(3, 1fr); }
     .grid.c4 { grid-template-columns: repeat(4, 1fr); }
   }
+  /* Rows always come out even. A grid of exactly three stays three across on
+     tablets instead of leaving one card alone on a second row, and a two-column
+     list with an odd count features its first card at full width. */
+  @media (min-width: 640px) {
+    .grid.c3:has(> :last-child:nth-child(3)) { grid-template-columns: repeat(3, 1fr); }
+    .grid.c2 > :first-child:nth-last-child(odd):not(:only-child) { grid-column: 1 / -1; }
+  }
+  /* Three across on a tablet makes narrow cards: tighten them so short titles
+     like "Accident Towing" stay on one line. */
+  @media (min-width: 640px) and (max-width: 979px) {
+    .grid.c3:has(> :last-child:nth-child(3)) > .card { padding: 1.4rem 1.1rem 1.2rem; }
+    .grid.c3:has(> :last-child:nth-child(3)) > .card h3 { font-size: 1.12rem; }
+    .grid.c3:has(> :last-child:nth-child(3)) > .card .go { top: 1.15rem; right: 0.9rem; }
+  }
   @media (min-width: 980px) {
     .grid.bento { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; }
     .grid.bento > :first-child { grid-column: span 2; }
