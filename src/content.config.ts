@@ -7,8 +7,13 @@ const blog = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    updated: z.coerce.date().optional(),
     hero: z.string().optional(),
-    heroAlt: z.string().optional()
+    heroAlt: z.string().optional(),
+    // Service slugs (src/data/services.ts) linked as related cards under the post.
+    services: z.array(z.string()).optional(),
+    // Questions shown under the post and marked up as FAQPage for rich results.
+    faq: z.array(z.object({ q: z.string(), a: z.string() })).optional()
   })
 });
 

@@ -478,9 +478,9 @@ const navLinks = [
   /* Three across on a tablet makes narrow cards: tighten them so short titles
      like "Accident Towing" stay on one line. */
   @media (min-width: 640px) and (max-width: 979px) {
-    .grid.c3:has(> :last-child:nth-child(3)) > .card { padding: 1.4rem 1.1rem 1.2rem; }
-    .grid.c3:has(> :last-child:nth-child(3)) > .card h3 { font-size: 1.12rem; }
-    .grid.c3:has(> :last-child:nth-child(3)) > .card .go { top: 1.15rem; right: 0.9rem; }
+    .grid.c3:has(> :last-child:nth-child(3)) > .card { padding: 1.4rem 0.9rem 1.2rem; }
+    .grid.c3:has(> :last-child:nth-child(3)) > .card h3 { font-size: 1.04rem; letter-spacing: -0.01em; padding-right: 1.1rem; }
+    .grid.c3:has(> :last-child:nth-child(3)) > .card .go { top: 1.15rem; right: 0.75rem; }
   }
   @media (min-width: 980px) {
     .grid.bento { grid-template-columns: repeat(3, 1fr); grid-auto-rows: 1fr; }

@@ -57,7 +57,7 @@ None of those are tricks. They reflect real differences in the work, and a reaso
 
 ## When you might not need a tow at all
 
-A surprising number of calls end without a tow. If the car clicks but will not start, a jump might be all it needs. A flat with a good spare is a short roadside job. If you simply ran out of gas, fuel delivery gets you to a pump for a fraction of the cost of a tow. When you call, describe what is happening, and a good dispatcher will suggest the cheaper fix when it fits.
+A surprising number of calls end without a tow. If the car clicks but will not start, [a jump might be all it needs](/blog/car-wont-start-stockton/). A flat with a good spare is a short roadside job. If you simply ran out of gas, fuel delivery gets you to a pump for a fraction of the cost of a tow. When you call, describe what is happening, and a good dispatcher will suggest the cheaper fix when it fits.
 
 ## Will insurance or a roadside plan cover it?
 

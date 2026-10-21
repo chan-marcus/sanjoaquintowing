@@ -32,7 +32,7 @@ Do not stand between your car and traffic, and do not try to wave other cars aro
 
 ### 4. If you are stuck in a lane, call 911
 
-If the car stopped in a travel lane and will not move, call 911 right away. This is an emergency, not a roadside call. CHP can manage traffic and get help to you quickly. Call for a tow once you are safe.
+If the car stopped in a travel lane and will not move, call 911 right away. This is an emergency, not a roadside call. CHP can manage traffic and get help to you quickly. Call for a tow once you are safe. If there was a collision, our guide on [what to do after an accident on I-5](/blog/accident-i5-stockton/) walks through the report and the tow.
 
 ### 5. Give an exact location
 
