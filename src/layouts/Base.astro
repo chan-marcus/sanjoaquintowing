@@ -450,6 +450,7 @@ const navLinks = [
   .nav-mobile-panel a {
     color: var(--ivory); font-family: var(--display); font-weight: 800; font-size: 1.2rem;
     padding: 0.9rem 0.2rem 0.75rem; border-bottom: 1px solid var(--ink-line);
+    white-space: nowrap; /* one line each; the closed menu is laid out a sliver wide */
   }
   .nav-mobile-call {
     margin-top: 0.5rem; color: var(--accent) !important;
@@ -533,8 +534,9 @@ const navLinks = [
   @media (min-width: 720px) { .spec.two { grid-template-columns: 1fr 1fr; } }
   .spec li { padding-left: 1.1rem; border-left: 3px dashed var(--accent); }
   .spec strong { font-weight: 700; font-size: 1.02rem; }
-  .spec span { display: block; color: var(--slate); font-size: 0.95rem; }
-  .s-paper .spec span { color: var(--slate-deep); }
+  /* Direct child only: the typesetter's .pn and .nw spans inside must stay inline. */
+  .spec li > span { display: block; color: var(--slate); font-size: 0.95rem; }
+  .s-paper .spec li > span { color: var(--slate-deep); }
 
   .figure {
     margin: 1.6rem 0 0; border-radius: var(--r); overflow: hidden;
