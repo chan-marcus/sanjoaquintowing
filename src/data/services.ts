@@ -327,7 +327,7 @@ export const SERVICES: Service[] = [
   {
     slug: 'tire-change',
     name: 'Flat Tire Change',
-    short: 'Flat on the shoulder or in a lot. An operator mounts your spare so you can get to a tire shop.',
+    short: 'Flat on the shoulder or in a lot. An operator mounts your spare tire.',
     metaTitle: 'Flat Tire Change in Stockton, CA | San Joaquin Towing',
     metaDesc: "Flat tire in Stockton, Lodi, Manteca or Tracy? Roadside tire change dispatched 24/7, or a tow if there is no spare. Call (209) 850-7623.",
     h1: 'Flat Tire Change in Stockton, CA',
@@ -570,7 +570,7 @@ export const SERVICES: Service[] = [
     bullets: [
       { label: 'Matched to weight', text: "The dispatcher asks for weight and axle configuration so the right class of wrecker comes the first time." },
       { label: 'Fleet friendly', text: 'Works with your fleet manager or maintenance shop on billing and destination.' },
-      { label: 'RVs and motorhomes', text: 'Class A, C and fifth-wheel issues on the way to the foothills or the Delta.' }
+      { label: 'RVs and motorhomes', text: 'Class A, C and fifth-wheel breakdowns on the way up to the foothills or out to the Delta.' }
     ],
     body: [
       {

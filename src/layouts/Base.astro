@@ -299,6 +299,9 @@ const navLinks = [
   }
   * { box-sizing: border-box; margin: 0; }
   html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  /* Phones: the whole site is set at 90% (Marcus's rule for every site). Sizes
+     are rem, so type and spacing shrink together; breakpoints stay put. */
+  @media (max-width: 639.98px) { html { font-size: 90%; } }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
     *, *::before, *::after { animation: none !important; transition: none !important; }
